@@ -1,0 +1,145 @@
+# RAG系统 Docker Compose配置
+# 基于现有Neo4j配置，添加RAG应用服务
+
+version: '3.8'
+
+services:
+  # 继承现有Neo4j配置
+  neo4j:
+    image: neo4j:5.14.0-community
+    container_name: rag_neo4j
+    restart: unless-stopped
+    ports:
+      - "7475:7474"  # Neo4j Browser
+      - "7688:7687"  # Bolt协议
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+      - neo4j_import:/var/lib/neo4j/import
+      - neo4j_plugins:/plugins
+    environment:
+      # 认证配置
+      - NEO4J_AUTH=neo4j/neo4j123
+      
+      # 内存配置
+      - NEO4J_dbms_memory_heap_initial__size=2G
+      - NEO4J_dbms_memory_heap_max__size=4G
+      - NEO4J_dbms_memory_pagecache_size=2G
+      
+      # 基本配置
+      - NEO4J_dbms_default__database=neo4jfinal
+      - NEO4J_dbms_allow__upgrade=true
+      
+      # 日志配置
+      - NEO4J_dbms_logs_query_enabled=INFO
+      - NEO4J_dbms_logs_query_threshold=1s
+      
+      # 安全配置
+      - NEO4J_dbms_security_procedures_unrestricted=gds.*,apoc.*
+      - NEO4J_dbms_security_procedures_allowlist=gds.*,apoc.*
+      
+      # APOC配置 - 自动安装APOC插件
+      - NEO4JLABS_PLUGINS=["apoc"]
+      
+      # 事务配置
+      - NEO4J_dbms_transaction_timeout=30s
+      - NEO4J_dbms_transaction_concurrent_maximum=1000
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "neo4j123", "RETURN 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - rag_network
+
+  # RAG应用服务
+  rag_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rag_streamlit_app
+    restart: unless-stopped
+    ports:
+      - "8501:8501"  # Streamlit默认端口
+    environment:
+      # Neo4j连接配置
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USERNAME=neo4j
+      - NEO4J_PASSWORD=neo4j123
+      - NEO4J_DATABASE=neo4jfinal
+      
+      # OpenAI API配置
+      - OPENAI_API_KEY=sk-jnjnovforhovyujpdhwkviuhxhxnrspnouzbxfrgujhslhap
+      - OPENAI_BASE_URL=https://api.siliconflow.cn/v1
+      - OPENAI_MODEL=THUDM/glm-4-9b-chat
+      
+      # 应用配置
+      - APP_TITLE=新能源汽车智能推荐系统
+      - APP_ICON=🚗
+      - DISABLE_ANALYTICS=true
+      
+      # 向量数据库配置
+      - VECTOR_STORE_PATH=/app/vector_store
+      - CHUNK_SIZE=1000
+      - CHUNK_OVERLAP=200
+    volumes:
+      - vector_store:/app/vector_store
+      - app_logs:/app/logs
+      # 挂载数据文件
+      - ../Model_New/outputs:/app/data/model_outputs:ro
+      - ../Persona_New/outputs:/app/data/persona_outputs:ro
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - rag_network
+
+volumes:
+  neo4j_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/neo4j_data
+  neo4j_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./logs/neo4j_logs
+  neo4j_import:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/neo4j_import
+  neo4j_plugins:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/neo4j_plugins
+  vector_store:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/vector_store
+  app_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./logs/app_logs
+
+networks:
+  rag_network:
+    driver: bridge
+    name: rag_network

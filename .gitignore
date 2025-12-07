@@ -1,0 +1,57 @@
+# ==========================
+# 1. 核心安全配置 (最重要)
+# ==========================
+# 屏蔽包含 API Key 的真实配置文件
+.env
+.env.local
+
+# ==========================
+# 2. Python 环境与缓存
+# ==========================
+# 屏蔽虚拟环境文件夹
+venv/
+env/
+.venv/
+
+# 屏蔽 Python 编译缓存 (那些 .pyc 文件)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ==========================
+# 3. 运行时数据与数据库
+# ==========================
+# 屏蔽 Chroma 向量数据库的持久化文件
+vector_store/
+
+# 屏蔽 Neo4j 数据库挂载的数据目录 (根据 docker-compose.yml 配置)
+data/neo4j_data/
+data/neo4j_import/
+data/neo4j_plugins/
+data/vector_store/
+
+# 如果 logs 目录是运行后生成的日志，也屏蔽
+logs/
+
+# ==========================
+# 4. IDE 与 系统文件
+# ==========================
+# PyCharm / IntelliJ 配置
+.idea/
+
+# VS Code 配置
+.vscode/
+
+# Mac/Windows 系统缩略图
+.DS_Store
+Thumbs.db
+
+# ==========================
+# 5. 临时文件与日志
+# ==========================
+# 屏蔽所有日志文件
+*.log
+streamlit_install.log
+
+# 屏蔽之前截图上传的图片 (如果不需要存入仓库)
+image_*.png
