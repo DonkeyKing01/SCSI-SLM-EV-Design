@@ -55,3 +55,5 @@ streamlit_install.log
 
 # 屏蔽之前截图上传的图片 (如果不需要存入仓库)
 image_*.png
+# 屏蔽modelscope提交文件
+EV_RAG_System/
