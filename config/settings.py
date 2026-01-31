@@ -32,6 +32,9 @@ class Settings:
     CHUNK_OVERLAP = int(os.getenv('CHUNK_OVERLAP', '200'))
     EMBEDDING_MODEL = os.getenv('EMBEDDING_MODEL', 'BAAI/bge-large-zh-v1.5')
     
+    # [新增] 评估日志路径
+    EVAL_LOG_PATH = os.getenv('EVAL_LOG_PATH', './logs/rag_eval_logs.jsonl')
+    
     # 系统提示词模板
     SYSTEM_PROMPT_TEMPLATE = """
 你是一个专业的新能源汽车推荐助手。你拥有以下知识：

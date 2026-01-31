@@ -13,6 +13,10 @@ from config.settings import Settings
 from config.search_config import SearchConfig, SearchMode, QuestionType
 from core.question_analyzer import question_analyzer
 import logging
+import json
+import uuid
+from datetime import datetime
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -51,9 +55,27 @@ class RAGEngine:
             logger.error(f"RAG引擎初始化失败: {e}")
             raise
     
+    def _log_evaluation_data(self, record: Dict[str, Any]):
+        """
+        [新增] 将 RAG Triad 评估所需的完整数据写入 JSONL 日志文件
+        
+        Args:
+            record: 包含查询、答案、检索上下文等完整信息的字典
+        """
+        try:
+            log_dir = os.path.dirname(Settings.EVAL_LOG_PATH)
+            if log_dir and not os.path.exists(log_dir):
+                os.makedirs(log_dir)
+            
+            with open(Settings.EVAL_LOG_PATH, 'a', encoding='utf-8') as f:
+                f.write(json.dumps(record, ensure_ascii=False) + '\n')
+                
+        except Exception as e:
+            logger.error(f"写入评估日志失败: {e}")
+    
     def query(self, question: str, search_mode: str = "auto") -> Dict[str, Any]:
         """
-        处理用户查询
+        处理用户查询 (包含 Triad 评估日志记录)
         
         Args:
             question: 用户问题
@@ -62,26 +84,31 @@ class RAGEngine:
         Returns:
             包含答案和相关信息的字典
         """
+        # 生成唯一的 query_id，便于追踪
+        query_id = str(uuid.uuid4())
+        start_time = datetime.now()
+        
         try:
-            logger.info(f"处理查询: {question}, 模式: {search_mode}")
+            logger.info(f"[{query_id}] 处理查询: {question}, 模式: {search_mode}")
             
-            # 分析问题
+            # 1. 分析问题
             analysis = self.analyzer.analyze_question(question)
             question_type = analysis['question_type']
             
-            # 确定实际使用的搜索模式
+            # 2. 确定搜索模式
             if search_mode == "auto":
                 actual_mode = analysis['recommended_mode']
                 logger.info(f"自动选择搜索模式: {actual_mode.value}")
             else:
                 actual_mode = self.analyzer.validate_search_mode(search_mode)
             
-            # 获取搜索参数
+            # 3. 获取搜索参数
             search_params = analysis['search_params']
             
-            # 根据搜索模式获取上下文
+            # 4. 检索上下文 (这是原始的 Z 集合)
             context_docs = self._retrieve_context(question, actual_mode.value, search_params)
             
+            # 处理无结果情况
             if not context_docs:
                 return {
                     "answer": "抱歉，我没有找到相关信息来回答您的问题。",
@@ -92,14 +119,59 @@ class RAGEngine:
                     "context_count": 0
                 }
             
-            # 构建上下文
-            context = self._build_context(context_docs)
+            # 5. 构建上下文 (这是喂给 LLM 的最终 Prompt 上下文部分)
+            context_str = self._build_context(context_docs)
             
-            # 生成回答
-            answer = self._generate_answer(question, context)
+            # 6. 生成回答 (这是 a)
+            answer = self._generate_answer(question, context_str)
             
-            # 提取来源信息
+            # 7. 提取来源 (用于前端显示)
             sources = self._extract_sources(context_docs)
+            
+            # =======================================================
+            # [新增] 构建 RAG Triad 评估数据集 (Z 集合详情)
+            # =======================================================
+            structured_z = []
+            for rank, doc in enumerate(context_docs):
+                # 区分 Vector 还是 Graph 来源
+                # vector_graph_tool 中会在 metadata['type'] 中标记 'ai_graph_search', 'vector_search' 等
+                source_type = doc.metadata.get('type', 'unknown')
+                
+                # 如果是 hybrid 搜索，我们可以根据 type 区分是 vector 还是 graph 贡献的
+                retrieval_method = "graph" if "graph" in source_type else "vector"
+                if "cypher" in source_type: 
+                    retrieval_method = "cypher"
+                
+                structured_z.append({
+                    "rank": rank + 1,                 # 排序位置
+                    "content": doc.page_content,      # 文本内容
+                    "metadata": doc.metadata,         # 完整元数据 (包含 score, id 等)
+                    "source_type": source_type,       # 具体的搜索类型标记
+                    "retrieval_category": retrieval_method # 宽泛分类 (vector/graph/cypher) 用于消融实验
+                })
+
+            eval_record = {
+                "query_id": query_id,
+                "timestamp": start_time.isoformat(),
+                "duration_seconds": (datetime.now() - start_time).total_seconds(),
+                "inputs": {
+                    "question": question,             # q
+                    "search_mode_used": actual_mode.value
+                },
+                "outputs": {
+                    "answer": answer,                 # a
+                    "final_context_str": context_str  # 实际喂给 LLM 的拼接文本
+                },
+                "retrieval_context_Z": structured_z,  # 结构化的 Top-K 集合
+                "analysis_details": {
+                    "intent": analysis.get('question_type').value if hasattr(analysis.get('question_type'), 'value') else str(analysis.get('question_type')),
+                    "keywords": analysis.get('keywords', [])
+                }
+            }
+            
+            # 写入日志
+            self._log_evaluation_data(eval_record)
+            # =======================================================
             
             return {
                 "answer": answer,
@@ -108,7 +180,7 @@ class RAGEngine:
                 "question_type": question_type.value,
                 "analysis": analysis,
                 "context_count": len(context_docs),
-                "context": context[:500] + "..." if len(context) > 500 else context
+                "context": context_str[:500] + "..." if len(context_str) > 500 else context_str
             }
             
         except Exception as e:
