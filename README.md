@@ -77,7 +77,7 @@ NEO4J_PASSWORD=neo4j123
 NEO4J_DATABASE=neo4jfinal
 
 # API配置
-OPENAI_API_KEY=sk-jnjnovforhovyujpdhwkviuhxhxnrspnouzbxfrgujhslhap
+OPENAI_API_KEY=
 OPENAI_BASE_URL=https://api.siliconflow.cn/v1
 OPENAI_MODEL=deepseek-chat
 
