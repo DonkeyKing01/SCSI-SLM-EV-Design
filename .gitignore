@@ -1,59 +1,113 @@
-# ==========================
-# 1. 核心安全配置 (最重要)
-# ==========================
-# 屏蔽包含 API Key 的真实配置文件
-.env
-.env.local
+# RAG_System - Global .gitignore
 
-# ==========================
-# 2. Python 环境与缓存
-# ==========================
-# 屏蔽虚拟环境文件夹
-venv/
-env/
-.venv/
-
-# 屏蔽 Python 编译缓存 (那些 .pyc 文件)
+# ============================================
+# Python
+# ============================================
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
 
-# ==========================
-# 3. 运行时数据与数据库
-# ==========================
-# 屏蔽 Chroma 向量数据库的持久化文件
-vector_store/
+# ============================================
+# Virtual Environment
+# ============================================
+venv/
+env/
+ENV/
+.venv
 
-# 屏蔽 Neo4j 数据库挂载的数据目录 (根据 docker-compose.yml 配置)
-data/neo4j_data/
-data/neo4j_import/
-data/neo4j_plugins/
-data/vector_store/
-
-# 如果 logs 目录是运行后生成的日志，也屏蔽
-logs/
-
-# ==========================
-# 4. IDE 与 系统文件
-# ==========================
-# PyCharm / IntelliJ 配置
-.idea/
-
-# VS Code 配置
+# ============================================
+# IDE
+# ============================================
 .vscode/
+.idea/
+*.swp
+*.swo
+*~
 
-# Mac/Windows 系统缩略图
+# ============================================
+# Environment Variables
+# ============================================
+.env
+.env.local
+
+# ============================================
+# Logs
+# ============================================
+*.log
+logs/
+*.jsonl
+
+# ============================================
+# Temporary Files
+# ============================================
+*.tmp
+*.temp
 .DS_Store
 Thumbs.db
 
-# ==========================
-# 5. 临时文件与日志
-# ==========================
-# 屏蔽所有日志文件
-*.log
-streamlit_install.log
+# ============================================
+# Data Directories (Generated/Runtime Data)
+# ============================================
 
-# 屏蔽之前截图上传的图片 (如果不需要存入仓库)
-image_*.png
-# 屏蔽modelscope提交文件
-EV_RAG_System/
+# Neo4j Database Files (可再生)
+**/neo4j_data/
+**/neo4j_logs/
+
+# Vector Store (可再生)
+**/vector_store/
+
+# Chroma Database
+**/chroma.sqlite3
+
+# ============================================
+# 01_SSE_Analysis - 数据预处理输出
+# ============================================
+# 保留: cleaned_comments.csv, 星愿.csv, 比亚迪海豹06GT.csv
+# 忽略其他所有CSV文件
+01_SSE_Analysis/1_Data_Preprocessing/outputs/*.csv
+!01_SSE_Analysis/1_Data_Preprocessing/outputs/cleaned_comments.csv
+!01_SSE_Analysis/1_Data_Preprocessing/outputs/星愿.csv
+!01_SSE_Analysis/1_Data_Preprocessing/outputs/比亚迪海豹06GT.csv
+
+# ============================================
+# 02_User_Modeling - 产品IPA分析输出
+# ============================================
+# 保留: 宝马i7 M70_IPA.png, 蔚来ET5T_IPA.png
+# 忽略其他所有PNG文件
+02_User_Modeling/Product_IPA_Analysis/outputs/*.png
+!02_User_Modeling/Product_IPA_Analysis/outputs/宝马i7 M70_IPA.png
+!02_User_Modeling/Product_IPA_Analysis/outputs/蔚来ET5T_IPA.png
+
+# 保留其他文件类型（CSV, JSON, MD等）
+!02_User_Modeling/Product_IPA_Analysis/outputs/*.csv
+!02_User_Modeling/Product_IPA_Analysis/outputs/*.json
+!02_User_Modeling/Product_IPA_Analysis/outputs/*.md
+
+# ============================================
+# 02_User_Modeling - 用户聚类输出
+# ============================================
+# 保留所有PNG图片
+!02_User_Modeling/User_Preference_Clustering/outputs/*.png
+
+# ============================================
+# Models (预训练模型缓存)
+# ============================================
+**/models/
+**/.cache/
+
+# ============================================
+# Jupyter Notebooks
+# ============================================
+.ipynb_checkpoints/
+*.ipynb
+
+# ============================================
+# Docker
+# ============================================
+docker-compose.override.yml

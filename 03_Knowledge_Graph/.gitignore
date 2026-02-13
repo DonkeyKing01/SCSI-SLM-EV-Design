@@ -1,0 +1,98 @@
+# 新能源汽车知识图谱项目 - Git忽略配置
+
+# Python相关
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# 虚拟环境
+venv/
+env/
+ENV/
+.venv/
+.env/
+
+# 环境变量文件
+.env
+
+# IDE相关
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 系统文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 日志文件
+logs/
+*.log
+
+# Neo4j数据文件
+data/neo4j_data/
+data/neo4j_import/*.csv
+data/neo4j_plugins/
+
+# 性能监控报告
+performance_reports/
+*.json
+
+# 临时文件
+tmp/
+temp/
+*.tmp
+
+# 数据文件（根据需要调整）
+data/*.csv
+data/*.json
+data/*.txt
+data/clustering_report.md
+
+# 备份文件
+*.bak
+*.backup
+
+# 压缩文件
+*.zip
+*.tar.gz
+*.rar
+
+# 文档生成
+docs/_build/
+
+# 测试覆盖率
+.coverage
+htmlcov/
+
+# mypy类型检查
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Jupyter Notebook
+.ipynb_checkpoints

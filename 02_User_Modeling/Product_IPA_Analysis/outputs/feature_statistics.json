@@ -1,0 +1,301 @@
+{
+  "analysis_summary": {
+    "total_comments": 13682,
+    "total_cars": 48,
+    "feature_dimensions": 8,
+    "bert_enabled": true
+  },
+  "feature_statistics": {
+    "外观设计": {
+      "importance_weight": 0.12394536827379321,
+      "mention_count": 8594,
+      "mention_rate": 0.6281245431954393,
+      "avg_score": 0.1037764279805911,
+      "score_std": 0.04625427377222152,
+      "score_min": 0.0018337368965148926,
+      "score_max": 0.24998325109481812
+    },
+    "内饰质感": {
+      "importance_weight": 0.1235126988476571,
+      "mention_count": 8564,
+      "mention_rate": 0.625931881303903,
+      "avg_score": 0.10073225049929711,
+      "score_std": 0.04615543155966462,
+      "score_min": 0.0018330216407775879,
+      "score_max": 0.24984624981880188
+    },
+    "智能配置": {
+      "importance_weight": 0.14390585113287277,
+      "mention_count": 9978,
+      "mention_rate": 0.7292793451249817,
+      "avg_score": 0.10300356383570179,
+      "score_std": 0.04505356698090014,
+      "score_min": 0.0018332600593566895,
+      "score_max": 0.24984011054039001
+    },
+    "空间实用": {
+      "importance_weight": 0.1363197138612862,
+      "mention_count": 9452,
+      "mention_rate": 0.6908346732933781,
+      "avg_score": 0.10669624617072081,
+      "score_std": 0.044413067915080595,
+      "score_min": 0.0018336772918701172,
+      "score_max": 0.24996602535247803
+    },
+    "舒适体验": {
+      "importance_weight": 0.08957699352438092,
+      "mention_count": 6211,
+      "mention_rate": 0.4539541002777372,
+      "avg_score": 0.09988950860644362,
+      "score_std": 0.04135970159128743,
+      "score_min": 0.0018329918384552002,
+      "score_max": 0.249787837266922
+    },
+    "操控性能": {
+      "importance_weight": 0.1508429842652552,
+      "mention_count": 10459,
+      "mention_rate": 0.7644350241192808,
+      "avg_score": 0.10691408031459776,
+      "score_std": 0.04605875140542879,
+      "score_min": 0.0018333792686462402,
+      "score_max": 0.24992874264717102
+    },
+    "续航能耗": {
+      "importance_weight": 0.14402122964650907,
+      "mention_count": 9986,
+      "mention_rate": 0.7298640549627248,
+      "avg_score": 0.1073398618953018,
+      "score_std": 0.04593530025389685,
+      "score_min": 0.0018330216407775879,
+      "score_max": 0.2499367892742157
+    },
+    "价值认知": {
+      "importance_weight": 0.08787516044824553,
+      "mention_count": 6093,
+      "mention_rate": 0.4453296301710276,
+      "avg_score": 0.10566250596464785,
+      "score_std": 0.04093268605785247,
+      "score_min": 0.0018336176872253418,
+      "score_max": 0.24975085258483887
+    }
+  },
+  "car_rankings": {
+    "外观设计": [
+      {
+        "car_model": "19奥迪e-tron GT",
+        "score": 0.14381197094917297,
+        "review_count": 1
+      },
+      {
+        "car_model": "28传祺向往S7",
+        "score": 0.11744773997538756,
+        "review_count": 46
+      },
+      {
+        "car_model": "34零跑T03",
+        "score": 0.11655833485275004,
+        "review_count": 519
+      },
+      {
+        "car_model": "1特斯拉Model S",
+        "score": 0.11402982562285312,
+        "review_count": 89
+      },
+      {
+        "car_model": "49元PLUS",
+        "score": 0.1129107009126741,
+        "review_count": 731
+      }
+    ],
+    "内饰质感": [
+      {
+        "car_model": "19奥迪e-tron GT",
+        "score": 0.11791206002235413,
+        "review_count": 1
+      },
+      {
+        "car_model": "11智界S7",
+        "score": 0.11682638066652273,
+        "review_count": 64
+      },
+      {
+        "car_model": "10小米SU7 Ultra",
+        "score": 0.11456496268510818,
+        "review_count": 6
+      },
+      {
+        "car_model": "20保时捷Taycan",
+        "score": 0.11382096943390656,
+        "review_count": 107
+      },
+      {
+        "car_model": "5比亚迪海豹",
+        "score": 0.11194862501513689,
+        "review_count": 51
+      }
+    ],
+    "智能配置": [
+      {
+        "car_model": "15宝马i5  M60",
+        "score": 0.5,
+        "review_count": 2
+      },
+      {
+        "car_model": "19奥迪e-tron GT",
+        "score": 0.5,
+        "review_count": 1
+      },
+      {
+        "car_model": "10小米SU7 Ultra",
+        "score": 0.15786337082584698,
+        "review_count": 6
+      },
+      {
+        "car_model": "5比亚迪海豹",
+        "score": 0.11772345574949594,
+        "review_count": 51
+      },
+      {
+        "car_model": "18奔驰EQS580",
+        "score": 0.1177013774182435,
+        "review_count": 49
+      }
+    ],
+    "空间实用": [
+      {
+        "car_model": "16宝马i7 M70",
+        "score": 0.12580350092439738,
+        "review_count": 16
+      },
+      {
+        "car_model": "43小鹏MONA M03",
+        "score": 0.12558709779322064,
+        "review_count": 133
+      },
+      {
+        "car_model": "36秦L EV",
+        "score": 0.12341208125865627,
+        "review_count": 35
+      },
+      {
+        "car_model": "4比亚迪海豹06GT",
+        "score": 0.1176861165232217,
+        "review_count": 70
+      },
+      {
+        "car_model": "23smart精灵_1",
+        "score": 0.11739442535787155,
+        "review_count": 132
+      }
+    ],
+    "舒适体验": [
+      {
+        "car_model": "15宝马i5  M60",
+        "score": 0.20715677738189697,
+        "review_count": 2
+      },
+      {
+        "car_model": "10小米SU7 Ultra",
+        "score": 0.14503311117490134,
+        "review_count": 6
+      },
+      {
+        "car_model": "17奔驰EQE53 AMG",
+        "score": 0.1319059431552887,
+        "review_count": 3
+      },
+      {
+        "car_model": "42小米YU7",
+        "score": 0.12482624532034002,
+        "review_count": 17
+      },
+      {
+        "car_model": "44小鹏P7+",
+        "score": 0.12094274671777845,
+        "review_count": 80
+      }
+    ],
+    "操控性能": [
+      {
+        "car_model": "15宝马i5  M60",
+        "score": 0.11974311247467995,
+        "review_count": 2
+      },
+      {
+        "car_model": "4比亚迪海豹06GT",
+        "score": 0.11914071203255376,
+        "review_count": 70
+      },
+      {
+        "car_model": "10小米SU7 Ultra",
+        "score": 0.11884451337434626,
+        "review_count": 6
+      },
+      {
+        "car_model": "16宝马i7 M70",
+        "score": 0.11695574192553997,
+        "review_count": 16
+      },
+      {
+        "car_model": "6比亚迪秦L",
+        "score": 0.1167947376319639,
+        "review_count": 209
+      }
+    ],
+    "续航能耗": [
+      {
+        "car_model": "19奥迪e-tron GT",
+        "score": 0.5,
+        "review_count": 1
+      },
+      {
+        "car_model": "42小米YU7",
+        "score": 0.13529711817229675,
+        "review_count": 17
+      },
+      {
+        "car_model": "28传祺向往S7",
+        "score": 0.1345454295216099,
+        "review_count": 46
+      },
+      {
+        "car_model": "10小米SU7 Ultra",
+        "score": 0.12964189052581787,
+        "review_count": 6
+      },
+      {
+        "car_model": "39唐EV",
+        "score": 0.1238519945082719,
+        "review_count": 107
+      }
+    ],
+    "价值认知": [
+      {
+        "car_model": "17奔驰EQE53 AMG",
+        "score": 0.5,
+        "review_count": 3
+      },
+      {
+        "car_model": "19奥迪e-tron GT",
+        "score": 0.5,
+        "review_count": 1
+      },
+      {
+        "car_model": "16宝马i7 M70",
+        "score": 0.1430621019431523,
+        "review_count": 16
+      },
+      {
+        "car_model": "23smart精灵_1",
+        "score": 0.12597565699636548,
+        "review_count": 132
+      },
+      {
+        "car_model": "4比亚迪海豹06GT",
+        "score": 0.12531527497020423,
+        "review_count": 70
+      }
+    ]
+  },
+  "dimension_correlations": {}
+}

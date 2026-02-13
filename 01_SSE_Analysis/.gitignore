@@ -1,0 +1,15 @@
+# Environment Variables
+.env
+.env.local
+
+# Python
+__pycache__/
+*.pyc
+
+# Outputs
+outputs/*.pkl
+outputs/*.log
+
+# Temporary files
+*.tmp
+*.temp
