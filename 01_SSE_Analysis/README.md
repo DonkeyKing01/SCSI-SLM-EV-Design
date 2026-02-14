@@ -32,10 +32,11 @@ This module implements **Section 3.1**, transforming unstructured text into engi
 3. **专家校准**: 将原始标签映射至论文表2定义的 **8个核心工程维度**。
 
 ## 核心文件
-* `main_pipeline.py`: 执行完整清洗流程的总控脚本。
+* `1_Data_Preprocessing/cleaning_pipeline.py`: 数据清洗和预处理脚本。
+* `2_Dimension_Construction/tag_extraction_refinement.py`: 基于LLM的标签提取和细化。
 * `2_Dimension_Construction/dimension_mapping.json`: **[关键文件]** 经过专家校准的字典，用于将用户词汇映射到工程维度。
-* `outputs/`: 包含处理后的样本数据。
-    * *注：为减小仓库体积，`cleaned_comments.csv` 以 .zip 压缩包形式提供。*
+* `1_Data_Preprocessing/outputs/`: 包含处理后的样本数据。
+    * *注：为减小仓库体积，部分大文件以 .zip 压缩包形式提供。*
 
 ## 输入与输出
 * **输入**: 来自 `../00_Raw_Data/` 的原始 CSV 文件。

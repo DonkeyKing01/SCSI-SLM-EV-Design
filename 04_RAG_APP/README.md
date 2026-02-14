@@ -1,418 +1,253 @@
-# Module 04: Hybrid Retrieval-Reasoning System# Module 04: Hybrid Retrieval-Reasoning System# Module 04: Hybrid Retrieval-Reasoning System
-
-
+# Module 04: Hybrid Retrieval-Reasoning System
 
 ## Manuscript Reference
 
 This module implements the online application described in **Section 4.3: Hybrid Retrieval-Reasoning Engine**. It integrates the structured knowledge generated in Modules 01-03 to provide an interactive decision support interface for engineering design.
 
-## Manuscript Reference## Manuscript Reference
-
 ## System Architecture
 
-The system employs a "Dual-Channel Retrieval" mechanism followed by "Chain-of-Thought (CoT)" reasoning, consisting of three main components:This module implements the online application described in **Section 4.3: Hybrid Retrieval-Reasoning Engine**. It integrates the structured knowledge generated in Modules 01-03 to provide an interactive decision support interface for engineering design.This module implements the online application described in **Section 4.3: Hybrid Retrieval-Reasoning Engine**. It integrates the structured knowledge generated in Modules 01-03 to provide an interactive decision support interface for engineering design.
-
-
+The system employs a "Dual-Channel Retrieval" mechanism followed by "Chain-of-Thought (CoT)" reasoning, consisting of three main components:
 
 1. **Intent Analysis & Routing**:
-
    Classifies user queries into "Specific Fact Retrieval" or "Open-ended Reasoning" (corresponding to Fig. 4 in the manuscript) to select the optimal retrieval strategy.
 
-## System Architecture## System Architecture
-
 2. **Hybrid Retrieval**:
-
-   * **Vector Path**: Utilizes embedding similarity to retrieve relevant "User Personas" and unstructured "Review Evidence".The system employs a "Dual-Channel Retrieval" mechanism followed by "Chain-of-Thought (CoT)" reasoning, consisting of three main components:The system employs a "Dual-Channel Retrieval" mechanism followed by "Chain-of-Thought (CoT)" reasoning, consisting of three main components:
-
+   * **Vector Path**: Utilizes embedding similarity to retrieve relevant "User Personas" and unstructured "Review Evidence".
    * **Graph Path**: Executes Cypher queries on the Neo4j Engineering Design Knowledge Graph (EDKG) to traverse explicit relationships (e.g., `(Car)-[PERFORMS_ON]->(Feature)`).
 
-
-
 3. **Reasoning Generation**:
+   Synthesizes the retrieved multi-modal evidence using a Large Language Model (LLM) to generate evidence-backed engineering insights.
 
-   Synthesizes the retrieved multi-modal evidence using a Large Language Model (LLM) to generate evidence-backed engineering insights.1. **Intent Analysis & Routing**:1.  **Intent Analysis & Routing**:
-
-
-
-## Key Files   Classifies user queries into "Specific Fact Retrieval" or "Open-ended Reasoning" (corresponding to Fig. 4 in the manuscript) to select the optimal retrieval strategy.    Classifies user queries into "Specific Fact Retrieval" or "Open-ended Reasoning" (corresponding to Fig. 4 in the manuscript) to select the optimal retrieval strategy.
+## Key Files
 
 * `app.py`: Main Streamlit application with web interface.
-
-* `run.py`: Alternative entry point with data checking utilities.
-
+* `run.py`: Alternative entry point with environment validation.
 * `load_vector_data.py`: Script to load vector data into ChromaDB.
-
-* `core/rag_engine.py`: Core RAG engine implementation.2. **Hybrid Retrieval**:2.  **Hybrid Retrieval**:
-
+* `core/rag_engine.py`: Core RAG engine implementation.
 * `core/question_analyzer.py`: Question classification and intent analysis.
-
-* `tools/`: Vector search, graph query, and hybrid retrieval tools.   * **Vector Path**: Utilizes embedding similarity to retrieve relevant "User Personas" and unstructured "Review Evidence".    * **Vector Path**: Utilizes embedding similarity to retrieve relevant "User Personas" and unstructured "Review Evidence".
-
+* `tools/`: Vector search, graph query, and hybrid retrieval tools.
 * `database/neo4j_connection.py`: Neo4j database connection manager.
-
-   * **Graph Path**: Executes Cypher queries on the Neo4j Engineering Design Knowledge Graph (EDKG) to traverse explicit relationships (e.g., `(Car)-[PERFORMS_ON]->(Feature)`).    * **Graph Path**: Executes Cypher queries on the Neo4j Engineering Design Knowledge Graph (EDKG) to traverse explicit relationships (e.g., `(Car)-[PERFORMS_ON]->(Feature)`).
+* `config/settings.py`: Configuration management (loads from root `.env`).
 
 ## Prerequisites
 
 * **Docker & Docker Compose**: Recommended for deploying the Neo4j graph database.
-
 * **Python 3.8+**: Required for running the application backend.
+* **API Keys**: OpenAI or compatible LLM service API key.
 
-* **OpenAI API Key**: Required for the LLM inference engine.3. **Reasoning Generation**:3.  **Reasoning Generation**:
+## Configuration
 
+**Important**: This module loads configuration from the **project root directory's `.env` file**.
 
-
-## Configuration   Synthesizes the retrieved multi-modal evidence using a Large Language Model (LLM) to generate evidence-backed engineering insights.    Synthesizes the retrieved multi-modal evidence using a Large Language Model (LLM) to generate evidence-backed engineering insights.
-
-1. Navigate to the `04_RAG_APP/` directory.
-
-2. Copy the example configuration file:
-
+1. Ensure you have created `.env` file in the project root directory (not in this folder).
+2. Copy and configure from root `.env.example`:
    ```bash
-
-   cp .env.example .env## Prerequisites## Prerequisites
-
+   cd ..  # Navigate to project root
+   cp .env.example .env
+   # Edit .env with your actual API keys
    ```
 
-3. Edit the `.env` file and fill in the required configuration:* **Docker & Docker Compose**: Recommended for deploying the Neo4j graph database.* **Docker & Docker Compose**: Recommended for deploying the Neo4j graph database.
-
-   * `OPENAI_API_KEY`: Your LLM provider API key.
-
-   * `NEO4J_URI`: The connection URI for Neo4j (default: `bolt://localhost:7687`).* **Python 3.8+**: Required for running the application backend.* **Python 3.8+**: Required for running the application backend.
-
-   * `NEO4J_PASSWORD`: The password set for your Neo4j instance.
-
-* **OpenAI API Key**: Required for the LLM inference engine.* **OpenAI API Key**: Required for the LLM inference engine.
+3. Required environment variables:
+   * `OPENAI_API_KEY`: Your LLM provider API key
+   * `NEO4J_URI`: Neo4j connection URI (default: `bolt://localhost:7688`)
+   * `NEO4J_USERNAME`: Neo4j username (default: `neo4j`)
+   * `NEO4J_PASSWORD`: Neo4j password
+   * `NEO4J_DATABASE`: Database name (default: `neo4jfinal`)
 
 ## Quick Start (Local Execution)
 
+### Step 1: Start Knowledge Graph (Neo4j)
 
+If you do not have a local Neo4j instance running, use the provided Docker Compose file:
 
-**Step 1: Start Knowledge Graph (Neo4j)**
-
-## Configuration## Configuration
-
-If you do not have a local Neo4j instance running, use the provided Docker Compose file to start one:
-
-```bash1. Navigate to the `04_RAG_App/` directory.1.  Navigate to the `04_RAG_App/` directory.
-
+```bash
 docker-compose up -d neo4j
-
-```2. Copy the example configuration file:2.  Copy the example configuration file:
-
-
-
-**Step 2: Install Dependencies**   ```bash    ```bash
-
-
-
-Install the required Python packages:   cp .env.example .env    cp .env.example .env
-
-```bash
-
-pip install -r requirements.txt   ```    ```
-
 ```
 
-3. Edit the `.env` file and fill in the required configuration:3.  Edit the `.env` file and fill in the required configuration:
+Wait for Neo4j to fully start (check logs with `docker-compose logs -f neo4j`).
 
-**Step 3: Load Vector Data (Optional)**
+### Step 2: Install Dependencies
 
-   * `OPENAI_API_KEY`: Your LLM provider API key.    * `OPENAI_API_KEY`: Your LLM provider API key.
+Install the required Python packages from the **project root directory**:
 
-If you need to reload vector data into ChromaDB:
+```bash
+cd ..  # Navigate to project root
+pip install -r requirements.txt
+```
 
-```bash   * `NEO4J_URI`: The connection URI for Neo4j (default: `bolt://localhost:7687`).    * `NEO4J_URI`: The connection URI for Neo4j (default: `bolt://localhost:7687`).
+### Step 3: Load Vector Data (First Time Only)
 
+If you need to initialize the vector database with embeddings:
+
+```bash
+cd 04_RAG_APP
 python load_vector_data.py
-
-```   * `NEO4J_PASSWORD`: The password set for your Neo4j instance.    * `NEO4J_PASSWORD`: The password set for your Neo4j instance.
-
-
-
-**Step 4: Launch Application**
-
-
-
-Start the web interface using Streamlit:## Quick Start (Local Execution)## Quick Start (Local Execution)
-
-```bash
-
-streamlit run app.py
-
 ```
 
-**Step 1: Start Knowledge Graph (Neo4j)****Step 1: Start Knowledge Graph (Neo4j)**
+This will create the ChromaDB vector store in `./vector_store/`.
 
-Or use the alternative runner:
+### Step 4: Launch Application
+
+Start the web interface using Streamlit:
 
 ```bash
+streamlit run app.py
+```
 
+Or use the alternative runner with environment validation:
+
+```bash
 python run.py
+```
 
-```If you do not have a local Neo4j instance running, use the provided Docker Compose file to start one:If you do not have a local Neo4j instance running, use the provided Docker Compose file to start one:
+The application will be accessible at: **http://localhost:8501**
 
+## Usage Examples
 
+Once the application is running, you can ask questions such as:
 
-The application will be accessible at: http://localhost:8501 (or the port specified in your console output).```bash```bash
+* **Fact Retrieval**: "小米SU7的续航表现如何?" (How is the range performance of Xiaomi SU7?)
+* **Comparative Analysis**: "比较特斯拉Model 3和小鹏P7的智能配置" (Compare smart features of Tesla Model 3 vs XPeng P7)
+* **User Persona Query**: "性价比导向用户更关注哪些车型特征?" (Which features do value-oriented users care about?)
 
+## Troubleshooting
 
+**Neo4j Connection Failed**:
+- Verify Neo4j is running: `docker ps | grep neo4j`
+- Check connection settings in root `.env` file
+- Ensure the database name matches (default: `neo4jfinal`)
 
----docker-compose up -d neo4jdocker-compose up -d neo4j
+**Missing API Key Error**:
+- Confirm `OPENAI_API_KEY` is set in root `.env` file
+- Verify `.env` file is in the project root, not in this folder
 
+**Vector Store Not Found**:
+- Run `python load_vector_data.py` to initialize the vector database
 
+---
 
-# 模块 04：混合检索推理系统``````
-
-
+# 模块 04：混合检索推理系统
 
 ## 论文对应
 
 本模块实现了论文 **4.3 节：混合检索推理引擎** 中描述的在线应用程序。它集成了模块 01-03 生成的结构化知识，为工程设计提供交互式的决策支持界面。
 
-**Step 2: Install Dependencies****Step 2: Install Dependencies**
-
 ## 系统架构
 
 本系统采用"双通道检索"机制，并结合"思维链 (CoT)"推理，主要包含三个核心组件：
 
-
-
-1. **意图分析与路由**：Install the required Python packages:Install the required Python packages:
-
+1. **意图分析与路由**：
    将用户查询分类为"特定事实检索"或"开放式推理"（对应论文图4），以选择最优的检索策略。
 
-```bash```bash
-
 2. **混合检索**：
-
-   * **向量通道**：利用嵌入相似度检索相关的"用户画像"和非结构化"评论证据"。pip install -r requirements.txtpip install -r requirements.txt
-
+   * **向量通道**：利用嵌入相似度检索相关的"用户画像"和非结构化"评论证据"。
    * **图通道**：在 Neo4j 工程设计知识图谱 (EDKG) 上执行 Cypher 查询，遍历显式关系（如 `(车型)-[表现于]->(特征)`）。
 
-``````
-
 3. **推理生成**：
-
    利用大语言模型 (LLM) 综合检索到的多模态证据，生成具有证据支撑的工程洞察。
 
+## 核心文件
 
-
-## 核心文件**Step 3: Initialize Environment****Step 3: Initialize Environment**
-
-* `app.py`: 主 Streamlit 应用，包含 Web 界面。
-
-* `run.py`: 备用启动脚本，包含数据检查工具。
-
+* `app.py`: 主 Streamlit 应用程序，提供 Web 界面。
+* `run.py`: 备用入口点，包含环境验证功能。
 * `load_vector_data.py`: 将向量数据加载到 ChromaDB 的脚本。
-
-* `core/rag_engine.py`: 核心 RAG 引擎实现。Run the setup script to verify database connections and load necessary configurations:Run the setup script to verify database connections and load necessary configurations:
-
+* `core/rag_engine.py`: 核心 RAG 引擎实现。
 * `core/question_analyzer.py`: 问题分类与意图分析。
-
-* `tools/`: 向量搜索、图查询和混合检索工具。```bash```bash
-
+* `tools/`: 向量搜索、图查询和混合检索工具。
 * `database/neo4j_connection.py`: Neo4j 数据库连接管理器。
+* `config/settings.py`: 配置管理（从根目录 `.env` 加载）。
 
-python setup_env.pypython setup_env.py
+## 前置要求
 
-## 先决条件
+* **Docker & Docker Compose**: 推荐用于部署 Neo4j 图数据库。
+* **Python 3.8+**: 运行应用程序后端所需。
+* **API 密钥**: OpenAI 或兼容的 LLM 服务 API 密钥。
 
-* **Docker & Docker Compose**：推荐用于部署 Neo4j 图数据库。``````
+## 配置说明
 
-* **Python 3.8+**：用于运行应用程序后端。
+**重要提示**：本模块从**项目根目录的 `.env` 文件**加载配置。
 
-* **OpenAI API Key**：用于 LLM 推理引擎。
-
-
-
-## 配置步骤**Step 4: Launch Application****Step 4: Launch Application**
-
-1. 进入 `04_RAG_APP/` 目录。
-
-2. 复制示例配置文件：
-
+1. 确保在项目根目录（不是本文件夹）创建了 `.env` 文件。
+2. 从根目录的 `.env.example` 复制并配置：
    ```bash
-
-   cp .env.example .envStart the web interface:Start the web interface:
-
+   cd ..  # 进入项目根目录
+   cp .env.example .env
+   # 编辑 .env 填入真实的 API 密钥
    ```
 
-3. 编辑 `.env` 文件并填入必要的配置信息：```bash```bash
+3. 必需的环境变量：
+   * `OPENAI_API_KEY`: LLM 提供商的 API 密钥
+   * `NEO4J_URI`: Neo4j 连接 URI（默认：`bolt://localhost:7688`）
+   * `NEO4J_USERNAME`: Neo4j 用户名（默认：`neo4j`）
+   * `NEO4J_PASSWORD`: Neo4j 密码
+   * `NEO4J_DATABASE`: 数据库名称（默认：`neo4jfinal`）
 
-   * `OPENAI_API_KEY`: 您的 LLM 服务 API 密钥。
+## 快速开始（本地执行）
 
-   * `NEO4J_URI`: Neo4j 连接地址（默认为 `bolt://localhost:7687`）。python app.pypython app.py
+### 步骤 1：启动知识图谱 (Neo4j)
 
-   * `NEO4J_PASSWORD`: 您为 Neo4j 实例设置的密码。
-
-``````
-
-## 快速开始 (本地运行)
-
-
-
-**步骤 1: 启动知识图谱 (Neo4j)**
-
-The application will be accessible at: http://localhost:8501 (or the port specified in your console output).The application will be accessible at: http://localhost:8501 (or the port specified in your console output).
-
-如果您没有正在运行的本地 Neo4j 实例，请使用提供的 Docker Compose 文件启动：
+如果您没有本地 Neo4j 实例运行，使用提供的 Docker Compose 文件：
 
 ```bash
-
 docker-compose up -d neo4j
-
-```------
-
-
-
-**步骤 2: 安装依赖**
-
-
-
-安装所需的 Python 依赖包：# 模块 04：混合检索推理系统模块 04：混合检索推理系统
-
-```bash
-
-pip install -r requirements.txt论文对应
-
 ```
 
-## 论文对应本模块实现了论文 4.3 节：混合检索推理引擎 中描述的在线应用程序。它集成了模块 01-03 生成的结构化知识，为工程设计提供交互式的决策支持界面。
+等待 Neo4j 完全启动（使用 `docker-compose logs -f neo4j` 检查日志）。
 
-**步骤 3: 加载向量数据 (可选)**
+### 步骤 2：安装依赖
 
-本模块实现了论文 **4.3 节：混合检索推理引擎** 中描述的在线应用程序。它集成了模块 01-03 生成的结构化知识，为工程设计提供交互式的决策支持界面。
+从**项目根目录**安装所需的 Python 包：
 
-如果需要重新加载向量数据到 ChromaDB：
+```bash
+cd ..  # 进入项目根目录
+pip install -r requirements.txt
+```
 
-```bash系统架构
+### 步骤 3：加载向量数据（仅首次）
 
+如果需要初始化向量数据库：
+
+```bash
+cd 04_RAG_APP
 python load_vector_data.py
-
-```## 系统架构本系统采用“双通道检索”机制，并结合“思维链 (CoT)”推理，主要包含三个核心组件：
-
-
-
-**步骤 4: 启动应用程序**本系统采用"双通道检索"机制，并结合"思维链 (CoT)"推理，主要包含三个核心组件：
-
-
-
-使用 Streamlit 启动 Web 界面：意图分析与路由： 将用户查询分类为“特定事实检索”或“开放式推理”（对应论文图4），以选择最优的检索策略。
-
-```bash
-
-streamlit run app.py1. **意图分析与路由**：
-
 ```
 
-   将用户查询分类为"特定事实检索"或"开放式推理"（对应论文图4），以选择最优的检索策略。混合检索：
+这将在 `./vector_store/` 中创建 ChromaDB 向量存储。
 
-或使用备用启动器：
+### 步骤 4：启动应用
+
+使用 Streamlit 启动 Web 界面：
 
 ```bash
+streamlit run app.py
+```
 
+或使用带环境验证的备用启动器：
+
+```bash
 python run.py
-
-```2. **混合检索**：向量通道：利用嵌入相似度检索相关的“用户画像”和非结构化“评论证据”。
-
-
-
-应用程序通常可通过以下地址访问：http://localhost:8501（或控制台输出中指定的端口）。   * **向量通道**：利用嵌入相似度检索相关的"用户画像"和非结构化"评论证据"。
-
-
-   * **图通道**：在 Neo4j 工程设计知识图谱 (EDKG) 上执行 Cypher 查询，遍历显式关系（如 `(车型)-[表现于]->(特征)`）。图通道：在 Neo4j 工程设计知识图谱 (EDKG) 上执行 Cypher 查询，遍历显式关系（如 (车型)-[表现于]->(特征)）。
-
-
-
-3. **推理生成**：推理生成： 利用大语言模型 (LLM) 综合检索到的多模态证据，生成具有证据支撑的工程洞察。
-
-   利用大语言模型 (LLM) 综合检索到的多模态证据，生成具有证据支撑的工程洞察。
-
-先决条件
-
-## 先决条件Docker & Docker Compose：推荐用于部署 Neo4j 图数据库。
-
-* **Docker & Docker Compose**：推荐用于部署 Neo4j 图数据库。
-
-* **Python 3.8+**：用于运行应用程序后端。Python 3.8+：用于运行应用程序后端。
-
-* **OpenAI API Key**：用于 LLM 推理引擎。
-
-OpenAI API Key：用于 LLM 推理引擎。
-
-## 配置步骤
-
-1. 进入 `04_RAG_App/` 目录。配置步骤
-
-2. 复制示例配置文件：进入 04_RAG_App/ 目录。
-
-   ```bash
-
-   cp .env.example .env复制示例配置文件：
-
-   ```
-
-3. 编辑 `.env` 文件并填入必要的配置信息：Bash
-
-   * `OPENAI_API_KEY`: 您的 LLM 服务 API 密钥。cp .env.example .env
-
-   * `NEO4J_URI`: Neo4j 连接地址（默认为 `bolt://localhost:7687`）。编辑 .env 文件并填入必要的配置信息：
-
-   * `NEO4J_PASSWORD`: 您为 Neo4j 实例设置的密码。
-
-OPENAI_API_KEY: 您的 LLM 服务 API 密钥。
-
-## 快速开始 (本地运行)
-
-NEO4J_URI: Neo4j 连接地址（默认为 bolt://localhost:7687）。
-
-**步骤 1: 启动知识图谱 (Neo4j)**
-
-NEO4J_PASSWORD: 您为 Neo4j 实例设置的密码。
-
-如果您没有正在运行的本地 Neo4j 实例，请使用提供的 Docker Compose 文件启动：
-
-```bash快速开始 (本地运行)
-
-docker-compose up -d neo4j步骤 1: 启动知识图谱 (Neo4j) 如果您没有正在运行的本地 Neo4j 实例，请使用提供的 Docker Compose 文件启动：
-
 ```
 
-Bash
+应用程序将在以下地址访问：**http://localhost:8501**
 
-**步骤 2: 安装依赖**docker-compose up -d neo4j
+## 使用示例
 
-步骤 2: 安装依赖 安装所需的 Python 依赖包：
+应用程序运行后，您可以提出以下问题：
 
-安装所需的 Python 依赖包：
+* **事实检索**: "小米SU7的续航表现如何?"
+* **对比分析**: "比较特斯拉Model 3和小鹏P7的智能配置"
+* **用户画像查询**: "性价比导向用户更关注哪些车型特征?"
 
-```bashBash
+## 故障排查
 
-pip install -r requirements.txtpip install -r requirements.txt
+**Neo4j 连接失败**：
+- 验证 Neo4j 正在运行：`docker ps | grep neo4j`
+- 检查根目录 `.env` 文件中的连接设置
+- 确保数据库名称匹配（默认：`neo4jfinal`）
 
-```步骤 3: 初始化环境 运行设置脚本以验证数据库连接并加载必要的配置：
+**缺少 API 密钥错误**：
+- 确认在根目录 `.env` 文件中设置了 `OPENAI_API_KEY`
+- 验证 `.env` 文件在项目根目录，而不是本文件夹中
 
-
-
-**步骤 3: 初始化环境**Bash
-
-python setup_env.py
-
-运行设置脚本以验证数据库连接并加载必要的配置：步骤 4: 启动应用程序 启动 Web 界面：
-
-```bash
-
-python setup_env.pyBash
-
-```python app.py
-
-应用程序通常可通过以下地址访问：http://localhost:8501（或控制台输出中指定的端口）。
-**步骤 4: 启动应用程序**
-
-启动 Web 界面：
-```bash
-python app.py
-```
-
-应用程序通常可通过以下地址访问：http://localhost:8501（或控制台输出中指定的端口）。
+**未找到向量存储**：
+- 运行 `python load_vector_data.py` 初始化向量数据库
