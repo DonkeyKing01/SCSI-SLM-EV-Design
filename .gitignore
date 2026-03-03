@@ -111,3 +111,12 @@ Thumbs.db
 # Docker
 # ============================================
 docker-compose.override.yml
+
+# ============================================
+# Docs / Paper Figures (始终追踪)
+# ============================================
+# 确保 docs/images 下的图片可以被推送
+!docs/
+!docs/**
+!docs/images/
+!docs/images/**
