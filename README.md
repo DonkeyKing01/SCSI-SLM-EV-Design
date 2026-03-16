@@ -1,5 +1,9 @@
 # SCSI-SLM: Consumer Voice to Engineering Insight
 
+[![Paper](https://img.shields.io/badge/Paper-Journal%20Article-blue)](https://www.tandfonline.com/doi/full/10.1080/09544828.2026.2639933)
+![MIT License](https://img.shields.io/badge/License-MIT-green.svg)
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)
+
 Official implementation for the paper:
 
 **Mapping Consumer Voice into Engineering Insight: A Structured Language Model-Driven Design Support Framework for Electric Vehicles**
@@ -162,6 +166,22 @@ The default web interface is available at `http://localhost:8501`.
 
 ### Hybrid RAG Interface
 ![RAG Application Interface](docs/images/fig_rag_interface.png)
+
+## Application Scenario
+The SCSI-SLM framework supports multiple applications in electric vehicle product development.
+
+Typical scenarios include:
+
+- Product manager decision support based on consumer feedback
+- Engineering design insight mining from large-scale reviews
+- Knowledge-grounded product planning
+
+## Related Projects
+An example application prototype built on this framework:
+
+**EV Product Manager Decision Support System (EV-PM-DSS)**
+
+https://github.com/DonkeyKing01/EV-PM-DSS
 
 ## Reproducibility Notes
 - This repository provides the full research pipeline as modular code and includes many intermediate outputs.
